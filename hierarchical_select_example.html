@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Javascript universal filter example</title>
+	<script src="prototype.js" type="text/javascript"></script>
+	<script src="effects.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+var HierarchicalSelect = Class.create({
+	
+	initialize: function(container, all_opts, options){
+		this.container = container;
+		this.all_opts = all_opts;
+		this.options = Object.extend({"selecteds": []}, options);
+		
+		var selecteds = this.options.selecteds;
+		
+		// if there are default values, we create all the corresponding select elements with default selecteds
+		// or we only create one for the upper options in the hierarchy.
+		if (selecteds != undefined && selecteds.length > 0) {
+			this.insertSelect(this.all_opts, {"selected": selecteds.first()});
+			
+			// here we try to insert all the selects needed
+			var opts = this.all_opts;
+			for(i=1; i<selecteds.length; i++) {
+				var selected = selecteds[i];
+				
+				this.insertSelect(opts[selecteds[i-1]], {"selected": selected, "header": '<' + selecteds[i-1] + '>'});
+				opts = opts[selecteds[i-1]];
+			}
+			
+			// if the last selected option has children, we insert the next select element.
+			if(Object.keys(opts[selecteds.last()]) != undefined) this.insertSelect(opts[selecteds.last()], {"header": '<' + selecteds.last() + '>'});
+						
+		} else {
+			this.insertSelect(this.all_opts);			
+		}
+		
+	},
+	
+	// triggered when a select list is changed
+	selectChanged: function(e){
+		var sel = Event.element(e);
+		var container = this.container;
+		
+		// remove all the following select elements since they are not with effect any longer.
+		var children = sel.nextSiblings();
+		children.each(function(child) {container.removeChild(child)});
+		
+		// create a child select for the children of the selected option.
+		// the insertSelect function will deternmines whether there are children options.
+		var opts = sel.opts[sel.value];
+		this.insertSelect(opts, {"header": '<' + sel.value + '>', "effect_on": true});
+		
+		if(this.options.afterSelect != undefined) {
+			this.options.afterSelect(sel); //.evalScripts();
+		}
+	},
+	
+	// insertSelect only insert the select with options; if options.selected, then select that option
+	insertSelect: function(opts, options){
+		
+		// if there's no option, don't insert a select.
+		opt_keys = Object.keys(opts);
+		if(opt_keys.length == 0) return;
+		
+		options = Object.extend(this.options, options);
+		var sel = $(document.createElement("select"));
+		sel.id = options.id;
+		sel.opts = opts;
+		
+		// create the blank option in select field
+		var option = document.createElement("option");
+		option.text = option.innerText = options.header;
+		// option.value = options.header;
+		sel.insert(option);
+		
+		// create available options
+		opt_keys.each(function(txt) {
+			var option = document.createElement("option");
+			option.value = option.text = option.innerText = txt;
+			sel.insert(option);
+			
+			if(options.selected && options.selected != undefined && option.value == options.selected) option.selected = "selected";
+		});
+		
+		sel.onchange = this.selectChanged.bindAsEventListener(this);		
+		
+		this.container.appendChild(sel);
+		
+		if (!options.effect_on) return;
+		
+		sel.setStyle({display: "none"});
+		Effect.Appear(sel, {duration: 0.5});
+	}
+});
+
+
+</script>
+
+</head>
+
+<body>
+	
+<table>
+	<tr>
+		<td align="right">Try out a hierarchical select:<td>
+		<td id="hierarchical_select_td"/>
+	</tr>
+	<tr>
+		<td>Here shows the option you've selected.</td>
+		<td/>
+		<td><input type="text" id="show" size="27"></input></td>
+	</tr>
+</table>
+
+<script type="text/javascript">
+
+new HierarchicalSelect(
+	
+	$("hierarchical_select_td"),
+
+	{
+		"example option A": {
+			"A-1": {"A-1-1": {}, "A-1-2": {}},
+			"A-2": {},
+			"A-3": {}
+		}, 
+		"example option B": {
+			"B-1": {"B-1-1": {"B-1-1-1":{}}}
+		}
+	},
+	
+  {
+		"header": "<Example Hierarchical Select>",
+  	"afterSelect": function(sel) { $('show').value = sel.value; }
+  	// ,"selecteds": ["example option A", "A-1"]//if there are default values
+ 	}
+
+);
+
+Event.observe($('show'), 'load', $('show').value = $('hierarchical_select_td').lastChild.value);
+</script>
+
+</body>
+</html>
