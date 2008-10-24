@@ -11,11 +11,17 @@ var HierarchicalSelect = Class.create({
 		this.all_opts = all_opts;
 		this.options = Object.extend({"selecteds": []}, options);
 
-		var selecteds = this.options.selecteds;
-
-		// if there are default values, we create all the corresponding select elements with default selecteds
+		// if there is a default value, we create all the corresponding select elements with default selecteds
 		// or we only create one for the upper options in the hierarchy.
-		if (selecteds != undefined && selecteds.length > 0) {
+		var defaultOption = this.options.defaultOption
+		if(defaultOption!=undefined){
+			
+			// we generate all the options to be selected to reach the default value.
+			this.selecteds = new Array();
+			this.generateSelecteds(all_opts, defaultOption);
+			this.selecteds = this.selecteds.reverse();
+			
+			var selecteds = this.selecteds;
 			this.insertSelect(this.all_opts, {"selected": selecteds.first()});
 
 			// here we try to insert all the selects needed
@@ -34,6 +40,19 @@ var HierarchicalSelect = Class.create({
 			this.insertSelect(this.all_opts);			
 		}
 
+	},
+	
+	// if there is a default value when creating hierarchical select, we will need this function to retrieve the option path to the default value.
+	generateSelecteds: function(trees, targetNode){
+		var node, nodes = Object.keys(trees);
+		for(var i=0; i<nodes.length; i++){
+			node = nodes[i];
+			if(node == targetNode || (Object.keys(trees[node]).size() !=0 && this.generateSelecteds(trees[node], targetNode))){
+				this.selecteds.push(node);
+				return true;
+			}
+		}
+		return false;
 	},
 
 	// triggered when a select list is changed
