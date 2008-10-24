@@ -28,8 +28,8 @@ Hierarchical select refers to situations where the select options represent a hi
 When creating an object of hierarchical select, the first argument specifies the element in a page that contains the intending select elements, i.e. the location to place the hierarchical select. The hierarchical objects for options in the select elements should be provided as the second argument, in the format as shown in the following example. The third argument includes other necessary parameters: "header" is used to give a indicative header to the upper select element, and "afterSelect" specifies the behavior that responses to the select action.
 </p>
 
-<table border="1" width="100%">
-	<td bgcolor="LightGrey">
+<div style="border:solid grey 2px;">
+	<pre>
 	new HierarchicalSelect(<br/>&nbsp;&nbsp;
 
 		$("hierarchical_select_container_1"),<br/>&nbsp;&nbsp;
@@ -51,8 +51,8 @@ When creating an object of hierarchical select, the first argument specifies the
 	 	}<br/>
 
 	);
-	</td>
-</table>
+</pre>
+</div>
 <br/>
 <b>The output looks like: <a id="hierarchical_select_container_1"/></b>
 <p>This field gets the option you've selected. <input type="text" id="show_1" size="27"></input></p>
