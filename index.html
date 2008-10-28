@@ -17,7 +17,7 @@
 <body>
   
 <h1>Javascript Universal Hierarchical Select Examples</h1>
- 
+
 <p>
 Hierarchical select refers to situations where the select options represent a hierarchical structure of objects. In such cases, we assume that the option list of each select element contains a certain level in the object hierarchy. When an option is chosen, a new select element will appear next to the current one, containing options of children of the selected item, unless it reaches a leaf. We represent such a kind of select as a class, which can be instantiated where a hierarchical select is needed.
 </p>
@@ -28,8 +28,7 @@ Hierarchical select refers to situations where the select options represent a hi
 When creating an object of hierarchical select, the first argument specifies the element in a page that contains the intending select elements, i.e. the location to place the hierarchical select. The hierarchical objects for options in the select elements should be provided as the second argument, in the format as shown in the following example. The third argument includes other necessary parameters: "header" is used to give a indicative header to the upper select element, and "afterSelect" specifies the behavior that responses to the select action.
 </p>
  
-<table border="1" width="100%">
-  <td bgcolor="LightGrey">
+<div style="border:solid; background-color:LightGrey">
 		<pre>
  new HierarchicalSelect(
 
@@ -52,8 +51,7 @@ When creating an object of hierarchical select, the first argument specifies the
    }
 
  );</pre>
-  </td>
-</table>
+</div>
 <br/>
 <b>The output looks like: <a id="hierarchical_select_container_1"></a></b>
 <p>This field gets the option you've selected. <input type="text" id="show_1" size="27"></input></p>
@@ -93,8 +91,7 @@ new HierarchicalSelect(
 If there is a default value, i.e. you want to create your hierarchical select with something being selected, you can simply specify the default value within the third argument, all select elements needed will then be generated with corresponding options being selected.
 </p>
  
-<table border="1" width="100%">
-  <td bgcolor="LightGrey">
+<div style="border:solid; background-color:LightGrey">
 		<pre>
  new HierarchicalSelect(
 
@@ -118,8 +115,7 @@ If there is a default value, i.e. you want to create your hierarchical select wi
    }
 
  );</pre>
-  </td>
-</table>
+</div>
 <br/>
 <b>The output looks like: <a id="hierarchical_select_container_2"></a></b>
 <p>This field gets the option you've selected. <input type="text" id="show_2" size="27"></input></p>
